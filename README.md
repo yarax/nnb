@@ -1,3 +1,6 @@
+Компилируется, запросы идут, но пока не понятно как отдавать в ноду массив полученных заголовков results. Пока отдается заглушка строка
+
+
 # Node Native Extension Boilerplate
 
 [![Build Status](https://travis-ci.org/fcanas/node-native-boilerplate.svg)](https://travis-ci.org/fcanas/node-native-boilerplate)

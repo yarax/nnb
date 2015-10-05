@@ -24,11 +24,9 @@ struct thread_data{
 using namespace v8;
 using namespace Nan;
 const int NUM_THREADS = 10;
-char results[NUM_THREADS][512];
+std::vector<std::string> results;
 
-
-
-void *PrintHello(void *threadarg)
+void *worker(void *threadarg)
 {
     struct thread_data *my_data;
     char buffer[512] = "GET / HTTP/1.0\n\n";
@@ -54,7 +52,8 @@ void *PrintHello(void *threadarg)
     if (n < 0) 
         std::cout << "ERROR reading from socket";
 
-    strcpy(results[my_data->thread_id], buffer);
+    results.push_back(std::string(buffer));
+
     std::cout << buffer << "\n ============== \n";
     std::cout << "Thread ID : " << my_data->thread_id ;
     close(sockfd);
@@ -64,7 +63,7 @@ void *PrintHello(void *threadarg)
 
 void getUrl(const char *hostname, int portno)
 {
-    std::cout << "\n\n" << portno << "\n\n";
+    std::cout << "\n\n" << portno << " " << hostname << "\n\n";
     int sockfd, n;
 
     struct sockaddr_in serv_addr;
@@ -77,10 +76,11 @@ void getUrl(const char *hostname, int portno)
     int hostnameLength = strlen(hostname);
     char *hostWithZero = new char[hostnameLength + 1];
     strcpy(hostWithZero, hostname); 
-
+    std::cout << "before";
     server = gethostbyname(hostWithZero);
+    std::cout << "after";
     if (server == NULL) {
-        std::cout << "ERROR, no such host\n";
+        std::cout << "ERROR, no such host\n" << hostWithZero << " " << hostname;
         exit(0);
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
@@ -105,7 +105,7 @@ void getUrl(const char *hostname, int portno)
       td[i].serv_addr = serv_addr;
 
       rc = pthread_create(&threads[i], NULL,
-                          PrintHello, (void *)&td[i]);
+                          worker, (void *)&td[i]);
 
       if (rc){
          std::cout << "Error:unable to create thread," << rc << std::endl;
@@ -123,16 +123,46 @@ void getUrl(const char *hostname, int portno)
      //return buffer;
 }
 
-
- 
-NAN_METHOD(open)
-{
-    const char *hostname = *v8::String::Utf8Value(args[0]->ToString());
-    std::cout << hostname;
-    //string s = string(*cmd);
-    getUrl(hostname, args[1]->ToInteger()->Value());
-    std::cout << "ALL WORKERS ARE ITERATED\n\n\n";
-    NanReturnValue(NanNew<String>("werwer"));
+NAN_METHOD(open) {
+    Local<Array> v8Array = Nan::New<Array>();
+    std::string str = "erwer";
+    v8Array->Set(0, Nan::New<String>(str.c_str()) );
+    //v8Array->Set(0, Nan::New<Integer>(12) );
+    info.GetReturnValue().Set(v8Array);
 }
+
+/*NAN_METHOD(open) {
+    Local<Array> v8Array = Nan::New<Array>();
+    std::string str = "erwer";
+    v8Array->Set(0, Nan::New<Integer>(12) );
+    info.GetReturnValue().Set(v8Array);
+}*/
+ 
+/*NAN_METHOD(open) {
+    const char *hostname = *Nan::Utf8String(info[0]->ToString());
+    std::cout << "host: ";
+    std::cout << *hostname;
+    std::cout << "port: ";
+    std::cout << *Nan::Utf8String(info[1]->ToString());
+
+    //string s = string(*cmd);
+    getUrl(hostname, info[1]->ToInteger()->Value());
+    std::cout << "ALL WORKERS ARE ITERATED\n\n\n";
+
+    Local<Array> v8Array = Nan::New<Array>();
+    std::cout << "before";
+    int i = 0;
+    std::cout << "!!!" << results.size();
+    for( i=0; i < results.size(); i++ ){
+        //std::cout << results[i] << i << "EWRWRWEREWRWER";
+        //v8Array->Set(i, Nan::New<String>( results[i].c_str() ));
+        v8Array->Set(i, Nan::New<String>(results[i].c_str()) );
+    }
+
+    
+    info.GetReturnValue().Set(v8Array);
+    std::cout << "after";
+    //NanReturnValue(NanNew<String>("werwer"));
+}*/
 
 

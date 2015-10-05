@@ -1,3 +1,3 @@
-var NativeExtension = require('bindings')('NativeExtension');
-console.log(NativeExtension.open("yarax.ru", 80));
+var NativeExtension = require('./build/Release/NativeExtension');
+console.log(NativeExtension.open("google.com", 80));
 module.exports = NativeExtension;

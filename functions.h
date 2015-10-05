@@ -1,11 +1,16 @@
-#ifndef NATIVE_EXTENSION_GRAB_H
-#define NATIVE_EXTENSION_GRAB_H
+/*********************************************************************
+ * NAN - Native Abstractions for Node.js
+ *
+ * Copyright (c) 2015 NAN contributors
+ *
+ * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
+ ********************************************************************/
+
+#ifndef EXAMPLES_ASYNC_PI_ESTIMATE_SYNC_H_
+#define EXAMPLES_ASYNC_PI_ESTIMATE_SYNC_H_
 
 #include <nan.h>
 
-// Example top-level functions. These functions demonstrate how to return various js types.
-// Implementations are in functions.cc
-
 NAN_METHOD(open);
 
-#endif
+#endif  // EXAMPLES_ASYNC_PI_ESTIMATE_SYNC_H_

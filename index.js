@@ -1,3 +1,7 @@
 var NativeExtension = require('./build/Release/NativeExtension');
-console.log(NativeExtension.open("google.com", 80));
-module.exports = NativeExtension;
+
+var res = NativeExtension.open(10, "google.com", 80);
+
+console.log(res);
+console.log(res.length);
+

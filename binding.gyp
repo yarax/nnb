@@ -1,8 +1,8 @@
 {
     "targets": [
         {
-            "target_name": "NativeExtension",
-            "sources": [ "index.cc", "functions.cc" ],
+            "target_name": "nnb",
+            "sources": [ "src/index.cc", "src/functions.cc" ],
             "include_dirs" : [
  	 			"<!(node -e \"require('nan')\")"
 			]

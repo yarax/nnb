@@ -1,8 +1,11 @@
 {
+  "name": "nnb",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "configure": "node-gyp configure",
     "build": "node-gyp build",
+    "rebuild" : "node-gyp configure && node-gyp build",
     "test": "mocha"
   },
   "devDependencies": {

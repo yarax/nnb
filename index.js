@@ -1,7 +1,35 @@
-var NativeExtension = require('./build/Release/NativeExtension');
+var Opener = require('./build/Release/nnb');
 
-var res = NativeExtension.open(10, "google.com", 80);
+var NNB = function (options) {
+    options = options || {};
+    var required = {
+        concurrency: 1,
+        host: 1
+    };
+    var defaults = {
+        port: 80
+    };
+    var self = this;
 
-console.log(res);
-console.log(res.length);
+    Object.keys(required).forEach(function (param) {
+        if (!options[param]) {
+            throw new Error(param + " is a mandatory parameter");
+        }
+    });
 
+    Object.keys(defaults).forEach(function (paramName) {
+        self[paramName] = defaults[paramName];
+    });
+
+    Object.keys(options).forEach(function (paramName) {
+        self[paramName] = options[paramName];
+    });
+
+};
+
+NNB.prototype.go = function () {
+    return Opener.open(this.concurrency, this.host, this.port);
+};
+
+
+module.exports = NNB;

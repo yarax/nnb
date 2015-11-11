@@ -13,6 +13,10 @@
 #include <typeinfo>
 #include <pthread.h>
 
+#include "cluster.cpp"
+#include "http.cpp"
+
+
 using namespace v8;
 
 struct thread_data{

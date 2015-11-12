@@ -13,10 +13,6 @@
 #include <typeinfo>
 #include <pthread.h>
 
-#include "cluster.cpp"
-#include "http.cpp"
-
-
 using namespace v8;
 
 struct thread_data{
@@ -28,6 +24,19 @@ struct thread_data{
 using namespace v8;
 using namespace Nan;
 std::vector<std::string> results;
+
+class WorkerData
+{
+   public:
+    struct sockaddr_in serv_addr;
+    std::string path;
+    void init(const char *hostname, const char *path, int portno);
+};
+
+void WorkerData::init(const char *hostname, const char *path, int portno) 
+{
+
+}
 
 void *worker(void *threadarg)
 {
@@ -72,9 +81,7 @@ void getUrl(const char *hostname, int portno, int NUM_THREADS)
     int hostnameLength = strlen(hostname);
     char *hostWithZero = new char[hostnameLength + 1];
     strcpy(hostWithZero, hostname); 
-    std::cout << "before";
     server = gethostbyname(hostWithZero);
-    std::cout << "after";
     if (server == NULL) {
         std::cout << "ERROR, no such host\n" << hostWithZero << " " << hostname;
         exit(0);
@@ -118,7 +125,11 @@ void getUrl(const char *hostname, int portno, int NUM_THREADS)
 
 NAN_METHOD(open) {
     const char *hostname = *Nan::Utf8String(info[1]->ToString());
-    getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
+    const char *path = *Nan::Utf8String(info[2]->ToString());
+    
+    //getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
+    WorkerData data;
+    data.init(hostname, path, info[3]->ToInteger()->Value());
 
     Local<Array> obj = Nan::New<Array>();
     int i = 0;

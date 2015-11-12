@@ -20,9 +20,10 @@ describe('nnb', function() {
     });
 
     it('Request to google.com with concurrency 2', function () {
-        this.timeout(10000);
+        this.timeout(0);
         var nnb = new Nnb({
             host: 'google.com',
+            path: '/',
             concurrency: 2
         });
         var result = nnb.go();

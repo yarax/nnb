@@ -4,6 +4,7 @@ var NNB = function (options) {
     options = options || {};
     var required = {
         concurrency: 1,
+        path: 1,
         host: 1
     };
     var defaults = {
@@ -28,7 +29,7 @@ var NNB = function (options) {
 };
 
 NNB.prototype.go = function () {
-    return Opener.open(this.concurrency, this.host, this.port);
+    return Opener.open(this.concurrency, this.host, this.path, this.port);
 };
 
 

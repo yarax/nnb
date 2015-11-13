@@ -35,21 +35,40 @@ class WorkerData
 
 void WorkerData::init(const char *hostname, const char *path, int portno) 
 {
-
+    //struct sockaddr_in serv_addr;
+    struct hostent *server;
+    this->path = path;
+    int hostnameLength = strlen(hostname);
+    char *hostWithZero = new char[hostnameLength + 1];
+    strcpy(hostWithZero, hostname); 
+    server = gethostbyname(hostWithZero);
+    if (server == NULL) {
+        std::cout << "ERROR, no such host\n" << hostWithZero << " " << hostname;
+        exit(0);
+    }
+    bzero((char *) &this->serv_addr, sizeof(this->serv_addr));
+    this->serv_addr.sin_family = AF_INET;
+    bcopy((char *)server->h_addr, 
+         (char *)&serv_addr.sin_addr.s_addr,
+         server->h_length);
+    this->serv_addr.sin_port = htons(portno);
 }
 
-void *worker(void *threadarg)
+void *worker(WorkerData &my_data)
 {
-    struct thread_data *my_data;
+
+    std::cout << my_data.path;
+    return 0;
+    //struct thread_data *my_data;
     char buffer[512] = "GET / HTTP/1.0\n\n";
     int sockfd;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
         std::cout << "ERROR opening socket";
 
-    my_data = (struct thread_data *) threadarg;
+    //my_data = (struct thread_data *) threadarg;
 
-    if (connect(sockfd,(struct sockaddr *)&my_data->serv_addr,sizeof(my_data->serv_addr)) < 0) 
+    if (connect(sockfd,(struct sockaddr *)&my_data.serv_addr,sizeof(my_data.serv_addr)) < 0) 
         std::cout << "ERROR connecting";
     int n;
     n = write(sockfd,buffer,strlen(buffer));
@@ -71,43 +90,16 @@ void *worker(void *threadarg)
     
 }
 
-void getUrl(const char *hostname, int portno, int NUM_THREADS)
+void cluster(WorkerData &data, int num_threads)
 {
-    int sockfd, n;
-
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-
-    int hostnameLength = strlen(hostname);
-    char *hostWithZero = new char[hostnameLength + 1];
-    strcpy(hostWithZero, hostname); 
-    server = gethostbyname(hostWithZero);
-    if (server == NULL) {
-        std::cout << "ERROR, no such host\n" << hostWithZero << " " << hostname;
-        exit(0);
-    }
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr, 
-         (char *)&serv_addr.sin_addr.s_addr,
-         server->h_length);
-    serv_addr.sin_port = htons(portno);
-
     
-
-    pthread_t threads[NUM_THREADS];
-    struct thread_data td[NUM_THREADS];
-    int rc;
     int i;
-    
-
-    for( i=0; i < NUM_THREADS; i++ ){
-      td[i].thread_id = i;
-      td[i].message = "This is message";
-      td[i].serv_addr = serv_addr;
+    int rc;
+    pthread_t threads[num_threads];
+    for( i=0; i < num_threads; i++ ){
 
       rc = pthread_create(&threads[i], NULL,
-                          worker, (void *)&td[i]);
+                          worker, (void *)(&data));
 
       if (rc){
          std::cout << "Error:unable to create thread," << rc << std::endl;
@@ -130,6 +122,7 @@ NAN_METHOD(open) {
     //getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
     WorkerData data;
     data.init(hostname, path, info[3]->ToInteger()->Value());
+    cluster(data, info[0]->ToInteger()->Value());
 
     Local<Array> obj = Nan::New<Array>();
     int i = 0;

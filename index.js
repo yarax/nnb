@@ -28,8 +28,8 @@ var NNB = function (options) {
 
 };
 
-NNB.prototype.go = function () {
-    return Opener.open(this.concurrency, this.host, this.path, this.port);
+NNB.prototype.go = function (callback) {
+    return Opener.open(this.concurrency, this.host, this.path, this.port, callback);
 };
 
 

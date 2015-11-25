@@ -25,10 +25,11 @@ describe('nnb', function() {
         var nnb = new Nnb({
             host: 'google.com',
             path: '/',
-            concurrency: 2
+	    port: 80,
+            concurrency: 10
         });
         nnb.go(function (err, result) {
-            //console.log(arguments);
+            console.log(arguments);
             assert.equal(typeof result[0], 'string');
             assert.equal(typeof result[1], 'string');
             done();

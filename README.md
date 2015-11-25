@@ -1,59 +1,32 @@
-Компилируется, запросы идут, но пока не понятно как отдавать в ноду массив полученных заголовков results. Пока отдается заглушка строка
+# Native Node.js module for stress testing
 
+As you know Node.js has only one thread that doesn't allow to reach high performance in stress HTTP requesting.
+Multi request uses C++ Posix threads to reach hight concurency.
+The only limit for concurency is your system, check it `ulimit -n`
 
-# Node Native Extension Boilerplate
-
-[![Build Status](https://travis-ci.org/fcanas/node-native-boilerplate.svg)](https://travis-ci.org/fcanas/node-native-boilerplate)
-
-A very approachable node native extension.
-
-This repository serves as a nearly minimal native extension built on [Nan](https://github.com/nodejs/nan) with enough tooling to also make it a great starting point for more complex projects.
-
-## Building
-
-To compile the extension for the first time, run 
+### Usage
 
 ```
-$ npm run configure
-$ npm run build
+var MR = require('multi-request');
+var mr = new MR({
+            host: 'google.com',
+            path: '/',
+            port: 80,
+            concurrency: 100
+        });
+        nnb.go(function (err, result) {
+            console.log(result);
+        });
+``` 
+
+Output:
+```
+[ 'HTTP/1.0 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=UTF-8\r\nLocation: http://www.google.de/?gfe_rd=cr&ei=M3dVVr7lIsWG8QeA3ZuIBw\r\nContent-Length: 258\r\nDate: Wed, 25 Nov 2015 08:54:11 GMT\r\nServer: GFE/2.0\r\n\r\n<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">\n<TITLE>302 Moved</TITLE></HEAD><BODY>\n<H1>302 Moved</H1>\nThe document has moved\n<A HREF="http://www.google.de/?gfe_rd=cr&amp;ei=M3dVVr7lIsWG8QeA3ZuIBw">here</A>.\r\n</BODY></HTML>\r\n',
+....
+]
 ```
 
-All subsequent builds only need `npm run build`
+Result is array of strings, given by server for each request with headers
 
-### Working With the Extension Locally
 
-After building:
 
-```node
-$ node
-> var NativeExtension = require('./')
-undefined
-> NativeExtension.aString()
-'This is a thing.'
-> NativeExtension.aBoolean()
-false
-> NativeExtension.nothing()
-undefined
-> 
-```
-
-### To run tests:
-
-```
-$ npm test
-```
-
-or to run test continuously 
-
-```
-$ npm test -- watch
-```
-
-## The Parts
-
-File | Contents
--------------|----------------
-`NativeExtension.cc` | Represents the top level of the module. C++ constructs that are exposed to javascript are exported here
-`functions.cc` | Example top-level functions. These functions demonstrate how to build and return various js types.
-`index.js` | The main entry point for the node dependency
-`binding.gyp` | Describes your node native extention to the build system (`node-gyp`). As you add source files to the project, you should also add them to the binding file.

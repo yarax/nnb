@@ -1,4 +1,4 @@
-# Native Node.js module for stress testing
+# Native Node.js Benchmark module for stress testing
 
 As you know Node.js has only one thread that doesn't allow to reach high performance in stress HTTP requesting.
 Multi request uses C++ Posix threads to reach high concurency.
@@ -7,8 +7,8 @@ The only limit for concurency is your system, check it `ulimit -n`
 ### Usage
 
 ```
-var MR = require('multi-request');
-var mr = new MR({
+var Nnb = require('nnb');
+var nnb = new MR({
             host: 'google.com',
             path: '/',
             port: 80,

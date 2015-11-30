@@ -23,13 +23,14 @@ describe('nnb', function() {
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
         var nnb = new Nnb({
-            host: 'google.com',
-            path: '/',
-	    port: 80,
-            concurrency: 10
+            host: 'localhost',
+            path: '/fuck?a=123',
+	        port: 8082,
+            concurrency: 20,
+            method: 'POST'
         });
         nnb.go(function (err, result) {
-            console.log(arguments);
+            console.log(11, arguments);
             assert.equal(typeof result[0], 'string');
             assert.equal(typeof result[1], 'string');
             done();
@@ -43,8 +44,8 @@ describe('nnb', function() {
         var n = 0;
         var call = function() {
             var options = {
-              hostname: 'google.com',
-              port: 80,
+              hostname: 'localhost',
+              port: 8082,
               path: '/',
               method: 'GET'
             };

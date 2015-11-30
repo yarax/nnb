@@ -1,26 +1,30 @@
 var Opener = require('./build/Release/nnb');
+var url = require('url');
 
 var NNB = function (options) {
     options = options || {};
-    var required = {
-        concurrency: 1,
-        path: 1,
-        host: 1
-    };
-    var defaults = {
-        port: 80
-    };
+    var urlObj;
     var self = this;
 
-    Object.keys(required).forEach(function (param) {
-        if (!options[param]) {
-            throw new Error(param + " is a mandatory parameter");
-        }
-    });
+    if (!options.concurrency) {
+        throw new Error("Concurrency is a mandatory parameter");
+    }
 
-    Object.keys(defaults).forEach(function (paramName) {
-        self[paramName] = defaults[paramName];
-    });
+    options.method = (options.method || 'GET').toUpperCase();
+    options.headers = options.headers || '';
+
+    if (options.url) {
+        urlObj = url.parse(options.url);
+        if (urlObj.protocol === 'http') {
+            options.port = options.port || 80;
+        } else {
+            throw new Error('Unknown protocol');
+        }
+
+
+        options.host = urlObj.host;
+        options.path = urlObj.path + (urlObj.query || '');
+    }
 
     Object.keys(options).forEach(function (paramName) {
         self[paramName] = options[paramName];
@@ -29,7 +33,7 @@ var NNB = function (options) {
 };
 
 NNB.prototype.go = function (callback) {
-    return Opener.open(this.concurrency, this.host, this.path, this.port, callback);
+    return Opener.open(this.concurrency, this.method, this.host, this.path, this.port, this.headers, callback);
 };
 
 

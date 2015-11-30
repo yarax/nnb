@@ -2,21 +2,27 @@ class WorkerData
 {
    public:
     struct sockaddr_in serv_addr;
+    std::string method;
+    std::string hostname;
     std::string path;
-    void init(const char *hostname, const char *path, int portno);
+    std::string headers;
+    void init(const char *method, const char *hostname, const char *path, int portno, const char *headers);
 };
 
-void WorkerData::init(const char *hostname, const char *path, int portno) 
+void WorkerData::init(const char *method, const char *hostname, const char *path, int portno, const char *headers)
 {
     //struct sockaddr_in serv_addr;
     struct hostent *server;
+    this->method = method;
+    this->hostname = hostname;
     this->path = path;
-    int hostnameLength = strlen(hostname);
+    this->headers = headers;
+    /*int hostnameLength = strlen(hostname);
     char *hostWithZero = new char[hostnameLength + 1];
-    strcpy(hostWithZero, hostname); 
-    server = gethostbyname(hostWithZero);
+    strcpy(hostWithZero, hostname);*/
+    server = gethostbyname(hostname);
     if (server == NULL) {
-        std::cout << "ERROR, no such host\n" << hostWithZero << " " << hostname;
+        std::cout << "ERROR, no such host " << hostname << "\n";
         exit(0);
     }
     bzero((char *) &this->serv_addr, sizeof(this->serv_addr));

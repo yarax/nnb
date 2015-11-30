@@ -32,7 +32,6 @@ class Async : public Nan::AsyncWorker {
         Null()
       , obj
     };
-
     callback->Call(2, argv);
   }
 

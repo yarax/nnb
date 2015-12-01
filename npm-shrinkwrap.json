@@ -1,0 +1,11 @@
+{
+  "name": "nnb",
+  "version": "2.2.0",
+  "dependencies": {
+    "bindings": {
+      "version": "1.2.1",
+      "from": "bindings@>=1.2.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz"
+    }
+  }
+}

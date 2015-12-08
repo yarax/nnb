@@ -1,6 +1,6 @@
 {
   "name": "nnb",
-  "version": "2.2.2",
+  "version": "0.0.2",
   "main": "index.js",
   "scripts": {
     "configure": "node-gyp configure",

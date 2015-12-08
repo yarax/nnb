@@ -24,8 +24,14 @@ class Async : public Nan::AsyncWorker {
 
     Local<Array> obj = Nan::New<Array>();
     int i = 0;
+    std::string key1("time");
+    std::string key2("result");
+
     for( i=0; i < results.size(); i++ ){
-        obj->Set(i, Nan::New<String>(results[i].c_str()).ToLocalChecked() );
+        Local<Object> item = Nan::New<Object>();
+        item->Set(Nan::New<String>(key1.c_str()).ToLocalChecked(), Nan::New<Number>(results[i].time));
+        item->Set(Nan::New<String>(key2.c_str()).ToLocalChecked(), Nan::New<String>(results[i].response.c_str()).ToLocalChecked());
+        obj->Set(i, item);
     }
 
     Local<Value> argv[] = {

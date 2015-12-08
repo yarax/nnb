@@ -10,9 +10,6 @@ var NNB = function (options) {
         throw new Error("Concurrency is a mandatory parameter");
     }
 
-    options.method = (options.method || 'GET').toUpperCase();
-    options.headers = options.headers || '';
-
     if (options.url) {
         urlObj = url.parse(options.url);
         if (urlObj.protocol === 'http') {
@@ -25,6 +22,10 @@ var NNB = function (options) {
         options.host = urlObj.host;
         options.path = urlObj.path + (urlObj.query || '');
     }
+
+    options.method = (options.method || 'GET').toUpperCase();
+    options.headers = options.headers || '';
+    options.headers = 'Host:' + options.host + '\n\n' + options.headers;
 
     Object.keys(options).forEach(function (paramName) {
         self[paramName] = options[paramName];

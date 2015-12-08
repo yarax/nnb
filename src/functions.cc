@@ -12,11 +12,18 @@
 #include <cstring>
 #include <typeinfo>
 #include <pthread.h>
+#include <sys/time.h>
 
 using namespace v8;
 using namespace Nan;
 
-std::vector<std::string> results;
+struct Result {
+    std::string response;
+    int time;
+
+};
+
+std::vector<Result> results;
 
 #include "data.cc"
 #include "worker.cc"
@@ -36,7 +43,6 @@ NAN_METHOD(open) {
     data.init(method, hostname, path, port, headers);
     Nan::Callback *callback = new Callback(info[6].As<Function>());
     Nan::AsyncQueueWorker(new Async(callback, data, info[0]->ToInteger()->Value() ));
-
 
 }
 

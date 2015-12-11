@@ -24,7 +24,7 @@ void *worker(void *data)
         std::cout << "ERROR connecting";
     int n;
 
-    std::cout << buffer;
+    //std::cout << buffer;
 
     n = write(sockfd, buffer, strlen(buffer));
 
@@ -38,6 +38,7 @@ void *worker(void *data)
     n = read(sockfd,res_buffer,1023);
     if (n < 0) std::cout << "ERROR reading from socket";
 
+    close(sockfd);
     gettimeofday(&tp, NULL);
     long int ms2 = tp.tv_sec * 1000 + tp.tv_usec / 1000;
 
@@ -45,11 +46,11 @@ void *worker(void *data)
     current_result.time = ms2 - ms1;
     current_result.response = std::string(res_buffer);
 
-    results.push_back(current_result);
+    pthread_mutex_lock(&mutexsum);
 
-    //std::cout << buffer << "\n ============== \n";
-    //std::cout << "Thread ID : " << my_data->thread_id ;
-    close(sockfd);
+    results.push_back(current_result);
+    pthread_mutex_unlock (&mutexsum);
+    
     pthread_exit(NULL);
     
 }

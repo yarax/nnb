@@ -1,6 +1,8 @@
 var Nnb = require('../');
 var assert = require('assert');
 var http = require('http');
+var SegfaultHandler = require('segfault-handler');
+SegfaultHandler.registerHandler();
 
 describe('nnb', function() {
     it('Call without required fields', function () {
@@ -23,10 +25,10 @@ describe('nnb', function() {
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
         var nnb = new Nnb({
-            host: 'yarax.ru',
+            host: 'google.com',
             path: '/',
 	    port: 80,
-            concurrency: 20,
+            concurrency: 500,
             method: 'GET'
         });
         nnb.go(function (err, result) {
@@ -38,7 +40,7 @@ describe('nnb', function() {
         
     });
 
-    it('10 requests to google from async js', function (done) {
+    /*it('10 requests to google from async js', function (done) {
         this.timeout(200000);
         var i=0;
         var n = 0;
@@ -61,7 +63,7 @@ describe('nnb', function() {
             req.end();
         }
         call();
-    });
+    });*/
 
 
 });

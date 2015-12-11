@@ -25,6 +25,9 @@ struct Result {
 
 std::vector<Result> results;
 
+pthread_mutex_t mutexsum;
+int a = 0;
+
 #include "data.cc"
 #include "worker.cc"
 #include "cluster.cc"

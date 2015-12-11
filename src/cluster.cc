@@ -5,6 +5,7 @@ void cluster(WorkerData &data, int concurency)
     int rc;
 
     pthread_t threads[concurency];
+    pthread_mutex_init(&mutexsum, NULL);
     for( i=0; i < concurency; i++ ){
 
       rc = pthread_create(&threads[i], NULL,

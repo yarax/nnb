@@ -12,7 +12,7 @@ var NNB = function (options) {
 
     if (options.url) {
         urlObj = url.parse(options.url);
-        if (urlObj.protocol === 'http') {
+        if (urlObj.protocol === ':http') {
             options.port = options.port || 80;
         } else {
             throw new Error('Unknown protocol');

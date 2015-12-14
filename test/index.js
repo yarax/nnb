@@ -1,8 +1,6 @@
 var Nnb = require('../');
 var assert = require('assert');
 var http = require('http');
-var SegfaultHandler = require('segfault-handler');
-SegfaultHandler.registerHandler();
 
 describe('nnb', function() {
     it('Call without required fields', function () {

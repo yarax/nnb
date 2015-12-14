@@ -35,7 +35,7 @@ class Async : public Nan::AsyncWorker {
     }
 
     Local<Value> argv[] = {
-        Null()
+        Nan::Null()
       , obj
     };
     callback->Call(2, argv);

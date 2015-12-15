@@ -26,6 +26,7 @@ var NNB = function (options) {
     options.method = (options.method || 'GET').toUpperCase();
     options.headers = options.headers || '';
     options.headers = 'Host:' + options.host + '\n\n' + options.headers;
+    options.headersOnly = options.headersOnly ? 1 : 0;
 
     Object.keys(options).forEach(function (paramName) {
         self[paramName] = options[paramName];
@@ -34,7 +35,7 @@ var NNB = function (options) {
 };
 
 NNB.prototype.go = function (callback) {
-    return Opener.open(this.concurrency, this.method, this.host, this.path, this.port, this.headers, callback);
+    return Opener.open(this.concurrency, this.method, this.host, this.path, this.port, this.headers, this.headersOnly, callback);
 };
 
 

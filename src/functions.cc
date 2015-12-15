@@ -18,7 +18,8 @@ using namespace v8;
 using namespace Nan;
 
 struct Result {
-    std::string response;
+    std::string body;
+    std::string headers;
     int time;
 
 };
@@ -39,12 +40,13 @@ NAN_METHOD(open) {
     const char *hostname = *Nan::Utf8String(info[2]->ToString());
     const char *path = *Nan::Utf8String(info[3]->ToString());
     const char *headers = *Nan::Utf8String(info[5]->ToString());
+    int headers_only = info[6]->ToInteger()->Value();
     int port = info[4]->ToInteger()->Value();
 
     //getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
     WorkerData data;
-    data.init(method, hostname, path, port, headers);
-    Nan::Callback *callback = new Callback(info[6].As<Function>());
+    data.init(method, hostname, path, port, headers, headers_only);
+    Nan::Callback *callback = new Callback(info[7].As<Function>());
     Nan::AsyncQueueWorker(new Async(callback, data, info[0]->ToInteger()->Value() ));
 
 }

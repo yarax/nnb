@@ -1,6 +1,8 @@
 var Nnb = require('../');
 var assert = require('assert');
 var http = require('http');
+var SegfaultHandler = require('segfault-handler');
+SegfaultHandler.registerHandler("crash.log");
 
 describe('nnb', function() {
     it('Call without required fields', function () {
@@ -23,11 +25,12 @@ describe('nnb', function() {
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
         var nnb = new Nnb({
-            host: 'google.com',
+            host: 'yarax.ru',
             path: '/',
-	    port: 80,
-            concurrency: 500,
-            method: 'GET'
+	        port: 80,
+            concurrency: 1,
+            method: 'GET',
+            headersOnly: true
         });
         nnb.go(function (err, result) {
             console.log(11, arguments);

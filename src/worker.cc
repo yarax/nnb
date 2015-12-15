@@ -31,11 +31,36 @@ void *worker(void *data)
     if (n < 0)
         std::cout << "ERROR writing to socket";
 
+    int bytes_num = 2;
+    bool collect_body = false;
+    std::string body_string = "";
+    std::string header_string = "";    
 
-    char res_buffer[1024];
+    while (1) {
+        char res_buffer[bytes_num];
+        bzero(res_buffer, bytes_num);
+        n = read(sockfd, res_buffer, bytes_num-1);
+        
 
-    bzero(res_buffer,1024);
-    n = read(sockfd,res_buffer,1023);
+        if (collect_body){
+            if (my_data.headers_only > 0)
+                break;
+            body_string += std::string(res_buffer);
+        }
+        else
+            header_string += std::string(res_buffer);
+
+        if (header_string.find("\r\n\r\n") != -1 && !collect_body){
+            collect_body = true;
+        }
+        
+        if (n == 0)
+            break;
+    }
+    
+
+    //std::cout << "RESULT" << res_string << "\n";
+
     if (n < 0) std::cout << "ERROR reading from socket";
 
     close(sockfd);
@@ -44,7 +69,8 @@ void *worker(void *data)
 
     struct Result current_result;
     current_result.time = ms2 - ms1;
-    current_result.response = std::string(res_buffer);
+    current_result.body = body_string;
+    current_result.headers = header_string;
 
     pthread_mutex_lock(&mutexsum);
 

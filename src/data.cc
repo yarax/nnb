@@ -6,10 +6,11 @@ class WorkerData
     std::string hostname;
     std::string path;
     std::string headers;
-    void init(const char *method, const char *hostname, const char *path, int portno, const char *headers);
+    int headers_only;
+    void init(const char *method, const char *hostname, const char *path, int portno, const char *headers, int headers_only);
 };
 
-void WorkerData::init(const char *method, const char *hostname, const char *path, int portno, const char *headers)
+void WorkerData::init(const char *method, const char *hostname, const char *path, int portno, const char *headers, int headers_only)
 {
     //struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -17,13 +18,9 @@ void WorkerData::init(const char *method, const char *hostname, const char *path
     this->hostname = hostname;
     this->path = path;
     this->headers = headers;
-    /*int hostnameLength = strlen(hostname);
-    char *hostWithZero = new char[hostnameLength + 1];
-    strcpy(hostWithZero, hostname);*/
+    this->headers_only = headers_only;
+
     server = gethostbyname(hostname);
-    //std::cout << "!!!!!!";
-    //std::cout << "h_name" << server->h_name << "h_aliases" << server->h_aliases << "h_addrtype" << server->h_addrtype;
-    //std::cout << "!!!!!!<<";
 
     if (server == NULL) {
         std::cout << "ERROR, no such host " << hostname << "\n";

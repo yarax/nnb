@@ -24,16 +24,20 @@ describe('nnb', function() {
 
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
+        var rn = 5000;
         var nnb = new Nnb({
-            host: 'yarax.ru',
+            host: 'localhost',
             path: '/',
-	        port: 80,
-            concurrency: 1,
+            port: 80,
+            concurrency: rn,
             method: 'GET',
             headersOnly: true
         });
+        var ts1 = Date.now();
         nnb.go(function (err, result) {
-            console.log(11, arguments);
+            var ts = Date.now() - ts1;
+            var rps = rn/(ts/1000);
+            console.log("RPS", rps);
             //assert.equal(typeof result[0], 'string');
             //assert.equal(typeof result[1], 'string');
             done();

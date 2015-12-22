@@ -44,6 +44,7 @@ NAN_METHOD(open) {
     int port = info[4]->ToInteger()->Value();
 
     //getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
+    results.clear();
     WorkerData data;
     data.init(method, hostname, path, port, headers, headers_only);
     Nan::Callback *callback = new Callback(info[7].As<Function>());

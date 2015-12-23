@@ -23,7 +23,7 @@ class Async : public Nan::AsyncWorker {
     Nan::HandleScope scope;
 
     Local<Array> obj = Nan::New<Array>();
-    int i = 0;
+    unsigned long i = 0;
     std::string time("time");
     std::string body("body");
     std::string headers("headers");
@@ -44,8 +44,4 @@ class Async : public Nan::AsyncWorker {
     };
     callback->Call(2, argv);
   }
-
- private:
-  int points;
-  double estimate;
 };

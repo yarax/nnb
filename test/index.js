@@ -24,9 +24,9 @@ describe('nnb', function() {
 
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
-        var rn = 5000;
+        var rn = 200;
         var nnb = new Nnb({
-            host: 'localhost',
+            host: 'google.com',
             path: '/',
             port: 80,
             concurrency: rn,

@@ -13,7 +13,7 @@ void *worker(void *data)
     int sockfd;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
-        std::cout << "ERROR opening socket";
+        std::cout << "ERROR opening socket\n";
 
     //my_data = (struct thread_data *) threadarg;
     struct timeval tp;
@@ -21,7 +21,7 @@ void *worker(void *data)
     long int ms1 = tp.tv_sec * 1000 + tp.tv_usec / 1000;
 
     if (connect(sockfd,(struct sockaddr *)&my_data.serv_addr,sizeof(my_data.serv_addr)) < 0)
-        std::cout << "ERROR connecting";
+        std::cout << "ERROR connecting\n";
     int n;
 
     //std::cout << buffer;
@@ -29,7 +29,7 @@ void *worker(void *data)
     n = write(sockfd, buffer, strlen(buffer));
 
     if (n < 0)
-        std::cout << "ERROR writing to socket";
+        std::cout << "ERROR writing to socket\n";
 
     int bytes_num = 2;
     bool collect_body = false;

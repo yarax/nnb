@@ -6,11 +6,12 @@ class WorkerData
     std::string hostname;
     std::string path;
     std::string headers;
+    std::string body;
     int headers_only;
-    void init(const char *method, const char *hostname, const char *path, int portno, const char *headers, int headers_only);
+    void init(const char *method, const char *hostname, const char *path, int portno, const char *headers, const char *body, int headers_only);
 };
 
-void WorkerData::init(const char *method, const char *hostname, const char *path, int portno, const char *headers, int headers_only)
+void WorkerData::init(const char *method, const char *hostname, const char *path, int portno, const char *headers, const char *body, int headers_only)
 {
     //struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -18,6 +19,7 @@ void WorkerData::init(const char *method, const char *hostname, const char *path
     this->hostname = hostname;
     this->path = path;
     this->headers = headers;
+    this->body = body;
     this->headers_only = headers_only;
 
     server = gethostbyname(hostname);

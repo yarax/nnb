@@ -40,14 +40,15 @@ NAN_METHOD(open) {
     const char *hostname = *Nan::Utf8String(info[2]->ToString());
     const char *path = *Nan::Utf8String(info[3]->ToString());
     const char *headers = *Nan::Utf8String(info[5]->ToString());
-    int headers_only = info[6]->ToInteger()->Value();
+    const char *body = *Nan::Utf8String(info[6]->ToString());
+    int headers_only = info[7]->ToInteger()->Value();
     int port = info[4]->ToInteger()->Value();
 
     //getUrl(hostname, info[2]->ToInteger()->Value(), info[0]->ToInteger()->Value());
     results.clear();
     WorkerData data;
-    data.init(method, hostname, path, port, headers, headers_only);
-    Nan::Callback *callback = new Callback(info[7].As<Function>());
+    data.init(method, hostname, path, port, headers, body, headers_only);
+    Nan::Callback *callback = new Callback(info[8].As<Function>());
     Nan::AsyncQueueWorker(new Async(callback, data, info[0]->ToInteger()->Value() ));
 
 }

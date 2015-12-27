@@ -5,6 +5,9 @@ var SegfaultHandler = require('segfault-handler');
 SegfaultHandler.registerHandler("crash.log");
 
 describe('nnb', function() {
+
+    it('Before');
+
     it('Call without required fields', function () {
         assert.throws(
             function() {
@@ -24,20 +27,24 @@ describe('nnb', function() {
 
     it('Request to google.com with concurrency 10', function (done) {
         this.timeout(0);
-        var rn = 200;
+        var rn = 1;
         var nnb = new Nnb({
-            host: 'google.com',
+            host: 'localhost',
             path: '/',
-            port: 80,
+            port: 3000,
             concurrency: rn,
-            method: 'GET',
-            headersOnly: true
+            method: 'POST',
+	        data: 'a=1&b=2',
+            headers: {
+                'Content-type' : 'text/plain'
+            },
+            headersOnly: false
         });
         var ts1 = Date.now();
         nnb.go(function (err, result) {
             var ts = Date.now() - ts1;
             var rps = rn/(ts/1000);
-            console.log("RPS", rps);
+            console.log("RPS", rps, result);
             //assert.equal(typeof result[0], 'string');
             //assert.equal(typeof result[1], 'string');
             done();

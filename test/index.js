@@ -4,9 +4,18 @@ var http = require('http');
 var SegfaultHandler = require('segfault-handler');
 SegfaultHandler.registerHandler("crash.log");
 
+var port = 3678;
+
 describe('nnb', function() {
 
-    it('Before');
+    it('Before', function (done) {
+        var serv = http.createServer(function (req, res) {
+            res.end('Method: ' + req.method);
+        }).listen(port, function () {
+            console.log('Server is up on', port);
+            done();
+        });
+    });
 
     it('Call without required fields', function () {
         assert.throws(
@@ -25,16 +34,46 @@ describe('nnb', function() {
         );
     });
 
-    it('Request to google.com with concurrency 10', function (done) {
+    it('Request with headers only', function (done) {
         this.timeout(0);
-        var rn = 1;
+        var rn = 10;
         var nnb = new Nnb({
             host: 'localhost',
             path: '/',
-            port: 3000,
+            port: port,
             concurrency: rn,
             method: 'POST',
 	        data: 'a=1&b=2',
+            headers: {
+                'Content-type' : 'text/plain'
+            },
+            headersOnly: true
+        });
+        var ts1 = Date.now();
+        nnb.go(function (err, result) {
+            assert(result.length, rn);
+            assert(typeof result[0].time, 'number');
+            assert(typeof result[0].headers, 'string');
+            assert.equal(result[0].body, '');
+
+            /*var ts = Date.now() - ts1;
+            var rps = rn/(ts/1000);
+            console.log("RPS", rps, result);*/
+            done();
+        });
+        
+    });
+
+    it('Request with body', function (done) {
+        this.timeout(0);
+        var rn = 10;
+        var nnb = new Nnb({
+            host: 'localhost',
+            path: '/',
+            port: port,
+            concurrency: rn,
+            method: 'POST',
+            data: 'a=1&b=2',
             headers: {
                 'Content-type' : 'text/plain'
             },
@@ -42,14 +81,17 @@ describe('nnb', function() {
         });
         var ts1 = Date.now();
         nnb.go(function (err, result) {
-            var ts = Date.now() - ts1;
-            var rps = rn/(ts/1000);
-            console.log("RPS", rps, result);
-            //assert.equal(typeof result[0], 'string');
-            //assert.equal(typeof result[1], 'string');
+            assert(result.length, rn);
+            assert(typeof result[0].time, 'number');
+            assert(typeof result[0].headers, 'string');
+            assert.equal(result[0].body, 'Method: POST');
+
+            /*var ts = Date.now() - ts1;
+             var rps = rn/(ts/1000);
+             console.log("RPS", rps, result);*/
             done();
         });
-        
+
     });
 
     /*it('10 requests to google from async js', function (done) {

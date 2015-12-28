@@ -1,8 +1,8 @@
 # Native Node.js Benchmark module for stress testing
 
 As you know Node.js has only one thread that doesn't allow to reach high performance in stress HTTP requesting.
-Multi request uses C++ Posix threads to reach high concurency.
-The only limit for concurency is your system, check it `ulimit -n`
+Nnb uses C++ Posix threads to reach high concurency.
+The limit for concurrency is on your system, check it `ulimit -n`
 
 ### Usage
 
@@ -12,7 +12,12 @@ var nnb = new MR({
             host: 'google.com',
             path: '/',
             port: 80,
-            concurrency: 100
+            method: 'GET',
+            concurrency: 50,
+            headers: {
+                'user-agent': 'Mozilla/5.0'
+            },
+            headersOnly: true
         });
         nnb.go(function (err, result) {
             console.log(result);
@@ -21,12 +26,17 @@ var nnb = new MR({
 
 Output:
 ```
-[ 'HTTP/1.0 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=UTF-8\r\nLocation: http://www.google.de/?gfe_rd=cr&ei=M3dVVr7lIsWG8QeA3ZuIBw\r\nContent-Length: 258\r\nDate: Wed, 25 Nov 2015 08:54:11 GMT\r\nServer: GFE/2.0\r\n\r\n<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">\n<TITLE>302 Moved</TITLE></HEAD><BODY>\n<H1>302 Moved</H1>\nThe document has moved\n<A HREF="http://www.google.de/?gfe_rd=cr&amp;ei=M3dVVr7lIsWG8QeA3ZuIBw">here</A>.\r\n</BODY></HTML>\r\n',
+[ { time: 80,
+      body: '',
+      headers: 'HTTP/1.1 200 OK\r\nDate: Mon, 28 Dec 2015 10:37:35 GMT\r\nConnection: close\r\n\r\n' },
 ....
 ]
 ```
 
-Result is array of strings, given by server for each request with headers
+`headersOnly` flag is used to avoid getting bytes further from socket right after getting all headers.
+In most cases that's enough to understand servers respond time and correctness.
+
+Result is array of strings, given by server for each request
 
 
 

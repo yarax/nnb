@@ -8,10 +8,6 @@ void *worker(void *data)
         request += "\r\n" + my_data.body;
     }
 
-    //char buffer[512] = "GET / HTTP/1.0\n\n";
-
-    std::cout << request;
-
     char *buffer = new char[request.length() + 1];
     strcpy(buffer, request.c_str());
 
@@ -50,23 +46,18 @@ void *worker(void *data)
         if (collect_body){
             if (my_data.headers_only > 0)
                 break;
-            std::cout << res_buffer;
             body_string += std::string(res_buffer);
         }
         else
             header_string += std::string(res_buffer);
 
         if (header_string.find("\r\n\r\n") != std::string::npos && !collect_body){
-            std::cout << "Collect body => true" << header_string;
             collect_body = true;
         }
         
         if (n == 0)
             break;
     }
-    
-
-    std::cout << "RESULT" << header_string << "\n" << body_string << "|";
 
     if (n < 0) std::cout << "ERROR reading from socket";
 

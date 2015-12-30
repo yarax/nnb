@@ -1,8 +1,9 @@
 var Opener = require('./build/Release/nnb');
 var url = require('url');
+var _ = require('lodash');
 
-var NNB = function (options) {
-    options = options || {};
+var NNB = function (params) {
+    var options = _.cloneDeep(params) || {};
     var urlObj;
     var self = this;
 

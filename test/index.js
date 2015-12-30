@@ -1,8 +1,8 @@
 var Nnb = require('../');
 var assert = require('assert');
 var http = require('http');
-var SegfaultHandler = require('segfault-handler');
-SegfaultHandler.registerHandler("crash.log");
+//var SegfaultHandler = require('segfault-handler');
+//SegfaultHandler.registerHandler("crash.log");
 
 var port = 3678;
 

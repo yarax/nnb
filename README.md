@@ -8,7 +8,7 @@ The limit for concurrency is on your system, check it `ulimit -n`
 
 ```
 var Nnb = require('nnb');
-var nnb = new MR({
+var nnb = new Nnb({
             host: 'google.com',
             path: '/',
             port: 80,
